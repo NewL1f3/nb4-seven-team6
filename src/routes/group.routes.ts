@@ -20,9 +20,13 @@ groupRouter
   .get(validateGroupQuery, getGroupsController) // 목록 조회
   .post(validate(Params.CreateGroupSchema), Controller.createGroupController);
 
-groupRouter.post('/:groupId/recommend', recommendGroup); // 추천수 증가
-groupRouter.post('/:groupId/join', joinGroup); // 그룹 참여
-groupRouter.post('/:groupId/leave', leaveGroup); // 그룹 탈퇴
+// 추천 API (프론트엔드와 일치하도록 수정)
+groupRouter.post('/:groupId/likes', recommendGroup); // 추천수 증가
+groupRouter.delete('/:groupId/likes', recommendGroup); // 추천수 증가 (중복 방지용 동일 동작)
+
+// 참여 API (프론트엔드와 일치하도록 수정)
+groupRouter.post('/:groupId/participants', joinGroup); // 그룹 참여
+groupRouter.delete('/:groupId/participants', leaveGroup); // 그룹 탈퇴
 
 groupRouter
   .route('/:groupId')

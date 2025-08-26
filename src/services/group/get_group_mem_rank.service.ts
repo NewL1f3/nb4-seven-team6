@@ -1,4 +1,4 @@
-import { PrismaClient } from '../../generated/prisma';
+import { PrismaClient } from '../../generated/prisma/index.js';
 
 const prisma = new PrismaClient();
 
@@ -42,12 +42,12 @@ export async function getGroupMemRankService(
       _sum: {
         seconds: true, // 기록 시간의 합
       },
-      orderBy: {
-        _sum: { seconds: order },
-      },
+      orderBy: [
+        { _sum: { seconds: order } },
+      ],
     });
     const result = await Promise.all(
-      ranks.map(async (r) => {
+      ranks.map(async (r: any) => {
         const member = await prisma.participant.findUnique({
           where: { id: r.participantId },
           select: { nickname: true },

@@ -40,7 +40,15 @@ export async function leaveGroup(
       throw error;
     }
 
-    // 참가자 삭제
+    // 1. 먼저 해당 참가자의 모든 운동 기록 삭제
+    await tx.record.deleteMany({
+      where: {
+        groupId,
+        nickname,
+      },
+    });
+
+    // 2. 그 다음 참가자 삭제
     await tx.participant.delete({
       where: { id: participant.id },
     });

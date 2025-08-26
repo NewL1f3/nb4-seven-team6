@@ -54,15 +54,19 @@ export async function evaluateAndAwardBadges(
     badgesToAward.push(BadgeType.LIKE_100);
   }
 
-  // 새로 획득한 배지들을 그룹에 연결
-  for (const badgeType of badgesToAward) {
-    const badge = await tx.badge.findUnique({ where: { type: badgeType } });
-    if (badge) {
+  // 새로 획득한 배지가 있는 경우, 배지들을 한번에 연결
+  if (badgesToAward.length > 0) {
+    const badges = await tx.badge.findMany({
+      where: { type: { in: badgesToAward } },
+      select: { id: true },
+    });
+
+    if (badges.length > 0) {
       await tx.group.update({
         where: { id: groupId },
         data: {
           badges: {
-            connect: { id: badge.id },
+            connect: badges.map((badge) => ({ id: badge.id })),
           },
         },
       });

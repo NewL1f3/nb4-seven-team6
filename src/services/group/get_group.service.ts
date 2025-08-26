@@ -23,7 +23,15 @@ export async function getGroupsService({
         [orderBy]: order,
       },
       where,
-      include: {
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        photoUrl: true,
+        goalRep: true,
+        likeCount: true,
+        createdAt: true,
+        updatedAt: true,
         tags: {
           select: { name: true },
         },
@@ -35,17 +43,15 @@ export async function getGroupsService({
             updatedAt: true,
           },
         },
-        participants: {
-          select: {
-            id: true,
-            nickname: true,
-            createdAt: true,
-            updatedAt: true,
-          },
-        },
         badges: {
           select: {
             type: true,
+          },
+        },
+        _count: {
+          select: {
+            participants: true,
+            records: true,
           },
         },
       },
